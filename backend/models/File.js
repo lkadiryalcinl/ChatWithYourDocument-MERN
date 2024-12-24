@@ -19,9 +19,9 @@ const fileSchema = new Schema(
         },
       },
     ],
-    uploadedBy: {
+    lecture: {
       type: Schema.Types.ObjectId,
-      ref: "User",
+      ref: "Lecture",
       required: true,
     },
   },
@@ -31,3 +31,4 @@ const fileSchema = new Schema(
 );
 
 module.exports = mongoose.model("File", fileSchema);
+
