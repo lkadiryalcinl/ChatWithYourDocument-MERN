@@ -31,8 +31,7 @@ function App() {
         <Route path='/reset-password/:userId/:passwordResetToken' element={<ResetPasswordPage/>}/>
         <Route exact path='/logout' element={<Protected><Logout/></Protected>}/>
         
-        <Route path='/' element={<HomePage/>}/>
-        <Route path='/chat' element={<ChatPage/>}/>
+        <Route path='/chat' element={<Protected><ChatPage/></Protected>}/>
 
         {
           loggedInUser?.isAdmin?(

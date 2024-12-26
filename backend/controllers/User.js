@@ -12,6 +12,7 @@ exports.getById=async(req,res)=>{
         res.status(500).json({message:'Error getting your details, please try again later'})
     }
 }
+
 exports.updateById=async(req,res)=>{
     try {
         const {id}=req.params
@@ -24,3 +25,13 @@ exports.updateById=async(req,res)=>{
         res.status(500).json({message:'Error getting your details, please try again later'})
     }
 }
+
+exports.getAllStudents = async (req, res) => {
+    try {
+      const students = await User.find({ role: "Student" }, "name email");
+      res.status(200).json(students);
+    } catch (error) {
+      console.error("Error fetching students:", error);
+      res.status(500).json({ message: "Failed to fetch students", error: error.message });
+    }
+  };

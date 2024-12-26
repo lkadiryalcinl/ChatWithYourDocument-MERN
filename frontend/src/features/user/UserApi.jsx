@@ -16,3 +16,12 @@ export const updateUserById=async(update)=>{
         throw error.response.data
     }
 }
+
+export const getAllStudents=async()=>{
+    try {
+        const res=await axiosi.get(`/users/getAllStudents`,)
+        return res.data
+    } catch (error) {
+        throw error.response.data
+    }
+}

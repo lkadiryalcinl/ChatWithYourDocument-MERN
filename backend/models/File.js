@@ -19,9 +19,9 @@ const fileSchema = new Schema(
         },
       },
     ],
-    lecture: {
+    uploadedBy: {
       type: Schema.Types.ObjectId,
-      ref: "Lecture",
+      ref: "User",
       required: true,
     },
   },

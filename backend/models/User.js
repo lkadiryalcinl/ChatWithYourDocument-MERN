@@ -25,13 +25,7 @@ const userSchema = new Schema(
       enum: ["Admin", "Instructor", "Student"],
       required: true,
       default: "Student",
-    },
-    lectures: [
-      {
-        type: Schema.Types.ObjectId,
-        ref: "Lecture",
-      },
-    ],
+    }
   },
   {
     timestamps: true,

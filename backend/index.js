@@ -7,6 +7,7 @@ const authRoutes=require("./routes/Auth")
 const userRoutes=require("./routes/User")
 const fileRoutes = require("./routes/File")
 const aiRoutes = require("./routes/AI")
+const lectureRoutes = require("./routes/Lecture")
 const { connectToDB } = require("./database/db")
 
 
@@ -33,6 +34,7 @@ server.use("/auth",authRoutes)
 server.use("/users",userRoutes)
 server.use("/files",fileRoutes)
 server.use("/ai",aiRoutes)
+server.use("/lectures",lectureRoutes)
 
 server.get("/",(req,res)=>{
     res.status(200).json({message:'running'})

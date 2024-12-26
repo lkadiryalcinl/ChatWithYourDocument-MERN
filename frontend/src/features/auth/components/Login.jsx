@@ -21,7 +21,7 @@ export const Login = () => {
   // handles user redirection
   useEffect(()=>{
     if(loggedInUser && loggedInUser?.isVerified){
-      navigate("/")
+      navigate("/chat")
     }
     else if(loggedInUser && !loggedInUser?.isVerified){
       navigate("/verify-otp")

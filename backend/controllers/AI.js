@@ -5,10 +5,10 @@ const systemPrompt = process.env.SYSTEM_PROMPT;
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_AI_KEY);
 
 exports.genAI = async(req, res) => {
-    const prompt = req.body.prompt;
+    const { prompt, lectureId } = req.body;
     const authorization = req.cookies.token;
     
-    const fileResponse = await fetch("http://localhost:7000/files/67617ec8b660b52bdc8ccef9", {
+    const lectureResponse = await fetch(`http://localhost:7000/lectures/${lectureId}`, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
@@ -17,11 +17,11 @@ exports.genAI = async(req, res) => {
         }
     });
     
-    const fileContent = JSON.stringify(await fileResponse.json());
+    const fileContent = await lectureResponse.json();
     
     const model = genAI.getGenerativeModel({ 
         model: "gemini-1.5-flash", 
-        systemInstruction: `${systemPrompt} ${fileContent}` 
+        systemInstruction: `${systemPrompt} ${JSON.stringify(fileContent.files)}` 
     });
 
     const result = await model.generateContent(prompt);
