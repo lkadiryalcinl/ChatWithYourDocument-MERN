@@ -1,15 +1,31 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Box, Typography, TextField, IconButton, Stack, Paper } from "@mui/material";
 import SendIcon from "@mui/icons-material/Send";
 
+import { generateResponseAsync } from "../ChatSlice";
+import { selectGeneratedResponseState } from "../ChatSlice";
+import { useDispatch, useSelector } from "react-redux";
+
 export default function Chat({ selectedCourse }) {
+  const dispatch = useDispatch();
+  const response = useSelector(selectGeneratedResponseState)
+
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
+
+  useEffect(() => {
+    setMessages([...messages, { text: response, sender: "AI" }]);
+  },[response])
 
   const handleSend = () => {
     if (newMessage.trim() !== "") {
       setMessages([...messages, { text: newMessage, sender: "user" }]);
       setNewMessage("");
+
+      dispatch(generateResponseAsync({
+        prompt:newMessage,
+        lectureId:selectedCourse._id
+      }))
     }
   };
 
@@ -20,7 +36,7 @@ export default function Chat({ selectedCourse }) {
         display: "flex",
         flexDirection: "column",
         height: "100%",
-        maxHeight: "80vh",
+        maxHeight: "90vh",
         p: 2,
         borderRadius: 2,
         overflow: "hidden",
@@ -28,7 +44,7 @@ export default function Chat({ selectedCourse }) {
     >
       <Box sx={{ mb: 2, borderBottom: "1px solid #ddd", pb: 1 }}>
         <Typography variant="h6">
-          {selectedCourse ? `${selectedCourse} Sohbet` : "Sohbet"}
+          {selectedCourse ? `${selectedCourse.name} Sohbet` : "Sohbet"}
         </Typography>
       </Box>
 

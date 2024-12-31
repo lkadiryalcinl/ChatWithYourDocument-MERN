@@ -158,7 +158,7 @@ const chatSlice=createSlice({
             })
             .addCase(updateLecturesAsync.fulfilled, (state, action) => {
                 state.lecturesStatus = 'fulfilled';
-                const updatedLectureIndex = state.lectures.findIndex((lecture) => lecture._id === action.meta.arg);
+                const updatedLectureIndex = state.lectures.findIndex((lecture) => lecture._id === action.payload._id);
                 if (updatedLectureIndex !== -1) {
                     state.lectures[updatedLectureIndex] = action.payload;
                 }
@@ -170,7 +170,9 @@ const chatSlice=createSlice({
     }
 })
 
-
+export const selectGeneratedResponseStateStatus=(state)=>state.ChatSlice.generatedResponseStateStatus
+export const selectGeneratedResponseState=(state)=>state.ChatSlice.generatedResponseState
+export const selectGeneratedResponseStateError=(state)=>state.ChatSlice.generatedResponseStateError
 
 export const selectFilesStatus=(state)=>state.ChatSlice.filesStatus
 export const selectFiles=(state)=>state.ChatSlice.files

@@ -5,7 +5,6 @@ const File = require("../models/File");
 
 exports.uploadFile = async (req, res) => {
   try {
-    const fileName = req.fileName;
     const file = req.file;
     const userId = req.user._id;
 
@@ -16,7 +15,7 @@ exports.uploadFile = async (req, res) => {
     const { content } = await processFile(file);
 
     const newFile = new File({
-      docName: fileName,
+      docName: file.originalname,
       content,
       uploadedBy: userId,
     });

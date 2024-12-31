@@ -2,13 +2,14 @@ import React, { useState } from "react";
 import Sidebar from "./Sidebar";
 import Chat from "./Chat";
 import DocumentUploadModal from "./DocumentUploadModal";
-import CourseCreateModal from "./CourseCreateModal";
+import CourseUpsertModal from "./CourseUpsertModal";
 import { Box, Stack } from "@mui/material";
 
 export default function App() {
   const [selectedCourse, setSelectedCourse] = useState(null);
   const [isDocumentModalOpen, setDocumentModalOpen] = useState(false);
   const [isCourseModalOpen, setCourseModalOpen] = useState(false);
+  const [modalMode, setModalMode] = useState("create"); 
 
   return (
     <Box
@@ -23,7 +24,15 @@ export default function App() {
         selectedCourse={selectedCourse}
         setSelectedCourse={setSelectedCourse}
         openDocumentModal={() => setDocumentModalOpen(true)}
-        openCourseModal={() => setCourseModalOpen(true)}
+        openCourseModal={() => {
+          setModalMode("create");
+          setCourseModalOpen(true);
+        }}
+        openUpdateCourseModal={(course) => {
+          setModalMode("update");
+          setSelectedCourse(course);
+          setCourseModalOpen(true);
+        }}
       />
       <Box sx={{ width: "80%", p: 4 }}>
         <Stack direction="column" spacing={4}>
@@ -34,9 +43,11 @@ export default function App() {
         open={isDocumentModalOpen}
         onClose={() => setDocumentModalOpen(false)}
       />
-      <CourseCreateModal
+      <CourseUpsertModal
         open={isCourseModalOpen}
         onClose={() => setCourseModalOpen(false)}
+        mode={modalMode}
+        course={selectedCourse}
       />
     </Box>
   );

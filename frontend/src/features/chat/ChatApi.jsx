@@ -56,7 +56,7 @@ export const deleteLecture=async(id)=>{
 
 export const updateLecture=async(id,data)=>{
     try {
-        const res=await axiosi.put(`/lectures/${id}`,data)
+        const res=await axiosi.patch(`/lectures/${id}`,data)
         return res.data
     } catch (error) {
         throw error.response.data

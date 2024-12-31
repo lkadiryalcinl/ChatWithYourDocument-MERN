@@ -10,10 +10,9 @@ import {
   Button,
 } from "@mui/material";
 import { UploadFile, Add, Logout, Edit, Delete } from "@mui/icons-material";
-
 import { useDispatch, useSelector } from "react-redux";
 import { logoutAsync, selectLoggedInUser } from "../../auth/AuthSlice.jsx";
-import { selectLectures, getLecturesAsync, deleteLecturesAsync, updateLecturesAsync } from "../ChatSlice.jsx";
+import { selectLectures, getLecturesAsync, deleteLecturesAsync } from "../ChatSlice.jsx";
 import { useNavigate } from "react-router-dom";
 
 export default function Sidebar({
@@ -21,6 +20,7 @@ export default function Sidebar({
   setSelectedCourse,
   openDocumentModal,
   openCourseModal,
+  openUpdateCourseModal,
 }) {
   const loggedInUser = useSelector(selectLoggedInUser);
   const isInstructor = loggedInUser?.role === "Instructor";
@@ -45,19 +45,8 @@ export default function Sidebar({
     dispatch(logoutAsync());
   };
 
-  const handleUpdate = (lecture) => {
-    const updatedData = {
-        // Define the updated lecture data here
-        name: "Updated Lecture Name", // Example
-        description: "Updated Description" // Example
-    };
-
-    dispatch(updateLecturesAsync({ id: lecture._id, data: updatedData }));
-};
-
   const handleDelete = (lecture) => {
-    console.log(lecture)
-    dispatch(deleteLecturesAsync(lecture._id))
+    dispatch(deleteLecturesAsync(lecture._id));
   };
 
   return (
@@ -92,7 +81,7 @@ export default function Sidebar({
         <Divider sx={{ mb: 2 }} />
         <Box
           sx={{
-            maxHeight: "calc(100vh - 200px)", // Adjust based on available height
+            maxHeight: "calc(100vh - 200px)",
             overflowY: "auto",
           }}
         >
@@ -133,9 +122,9 @@ export default function Sidebar({
                       size="small"
                       onClick={(e) => {
                         e.stopPropagation();
-                        handleUpdate(lecture);
+                        openUpdateCourseModal(lecture); 
                       }}
-                      sx={{ padding: "4px" }} 
+                      sx={{ padding: "4px" }}
                     >
                       <Edit fontSize="inherit" />
                     </IconButton>
@@ -145,7 +134,7 @@ export default function Sidebar({
                         e.stopPropagation();
                         handleDelete(lecture);
                       }}
-                      sx={{ padding: "4px" }} 
+                      sx={{ padding: "4px" }}
                     >
                       <Delete fontSize="inherit" />
                     </IconButton>
