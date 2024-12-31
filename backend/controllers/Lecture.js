@@ -113,7 +113,7 @@ exports.deleteLecture = async (req, res) => {
         return res.status(404).json({ message: "Lecture not found" });
       }
   
-      if (lecture.instructor.toString() !== req.user_id) {
+      if (lecture.instructor.toString() !== req.user._id) {
         return res.status(403).json({ message: "You are not authorized to delete this lecture" });
       }
   

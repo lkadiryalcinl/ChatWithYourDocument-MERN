@@ -1,12 +1,17 @@
 import React from "react";
 import { Modal, Box, Typography, TextField, Button, Stack } from "@mui/material";
 
+import { uploadFileAsync } from "../ChatSlice"
+import { useDispatch } from "react-redux";
+
 const DocumentUploadModal = ({ open, onClose }) => {
-  const [courseName, setCourseName] = React.useState("");
+  const [fileName, setFileName] = React.useState("");
   const [file, setFile] = React.useState(null);
+  const dispatch = useDispatch();
 
   const handleSubmit = () => {
-    console.log("Doküman Yükleme:", { courseName, file });
+    // dispatch(uploadFileAsync({ fileName, file }));
+    console.log("Doküman Yüklendi:", { fileName, file });
     onClose();
   };
 
@@ -32,8 +37,8 @@ const DocumentUploadModal = ({ open, onClose }) => {
         <Stack spacing={2}>
           <TextField
             label="Ders Adı"
-            value={courseName}
-            onChange={(e) => setCourseName(e.target.value)}
+            value={fileName}
+            onChange={(e) => setFileName(e.target.value)}
             fullWidth
             size="small"
           />

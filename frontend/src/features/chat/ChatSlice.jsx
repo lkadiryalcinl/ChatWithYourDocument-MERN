@@ -1,5 +1,5 @@
 import {createAsyncThunk, createSlice} from '@reduxjs/toolkit'
-import { generateResponse, uploadFile, getFiles, getLectures } from './ChatApi'
+import { generateResponse, uploadFile, getFiles, getLectures,createLecture, deleteLecture, updateLecture } from './ChatApi'
 
 const initialState={
     generatedResponseStateStatus:"idle",
@@ -31,10 +31,25 @@ export const getFilesAsync=createAsyncThunk('files', async() => {
     return files
 })
 
-export const getLecturesAsync=createAsyncThunk('lectures', async() => {
-    const files = await getLectures();
-    return files
-})
+export const getLecturesAsync = createAsyncThunk('lectures/getLectures', async () => {
+    const lectures = await getLectures();
+    return lectures;
+});
+
+export const createLecturesAsync = createAsyncThunk('lectures/createLecture', async (data) => {
+    const lecture = await createLecture(data);
+    return lecture;
+});
+
+export const deleteLecturesAsync = createAsyncThunk('lectures/deleteLecture', async (id) => {
+    const lecture = await deleteLecture(id);
+    return lecture;
+});
+
+export const updateLecturesAsync = createAsyncThunk('lectures/updateLecture', async ({ id, data }) => {
+    const updatedLecture = await updateLecture(id, data);
+    return updatedLecture;
+});
 
 const chatSlice=createSlice({
     name:"chatSlice",
@@ -113,6 +128,45 @@ const chatSlice=createSlice({
                 state.lecturesStatus='rejected'
                 state.lecturesError=action.error
             })
+
+            .addCase(createLecturesAsync.pending, (state) => {
+                state.lecturesStatus = 'pending';
+            })
+            .addCase(createLecturesAsync.fulfilled, (state, action) => {
+                state.lecturesStatus = 'fulfilled';
+                state.lectures = [...state.lectures, action.payload];
+            })
+            .addCase(createLecturesAsync.rejected, (state, action) => {
+                state.lecturesStatus = 'rejected';
+                state.lecturesError = action.error;
+            })
+
+            .addCase(deleteLecturesAsync.pending, (state) => {
+                state.lecturesStatus = 'pending';
+            })
+            .addCase(deleteLecturesAsync.fulfilled, (state, action) => {
+                state.lecturesStatus = 'fulfilled';
+                state.lectures = state.lectures.filter(lecture => lecture._id !== action.meta.arg);
+            })
+            .addCase(deleteLecturesAsync.rejected, (state, action) => {
+                state.lecturesStatus = 'rejected';
+                state.lecturesError = action.error;
+            })
+
+            .addCase(updateLecturesAsync.pending, (state) => {
+                state.lecturesStatus = 'pending';
+            })
+            .addCase(updateLecturesAsync.fulfilled, (state, action) => {
+                state.lecturesStatus = 'fulfilled';
+                const updatedLectureIndex = state.lectures.findIndex((lecture) => lecture._id === action.meta.arg);
+                if (updatedLectureIndex !== -1) {
+                    state.lectures[updatedLectureIndex] = action.payload;
+                }
+            })
+            .addCase(updateLecturesAsync.rejected, (state, action) => {
+                state.lecturesStatus = 'rejected';
+                state.lecturesError = action.error;
+            });
     }
 })
 

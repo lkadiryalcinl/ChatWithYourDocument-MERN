@@ -1,17 +1,30 @@
 import React, { useEffect } from "react";
-import { Box, Typography, Divider, List, ListItemButton, ListItemText, IconButton, Button } from "@mui/material";
-import { UploadFile, Add, Logout } from "@mui/icons-material";
+import {
+  Box,
+  Typography,
+  Divider,
+  List,
+  ListItemButton,
+  ListItemText,
+  IconButton,
+  Button,
+} from "@mui/material";
+import { UploadFile, Add, Logout, Edit, Delete } from "@mui/icons-material";
 
 import { useDispatch, useSelector } from "react-redux";
 import { logoutAsync, selectLoggedInUser } from "../../auth/AuthSlice.jsx";
-import { selectLectures, getLecturesAsync } from "../ChatSlice.jsx";
+import { selectLectures, getLecturesAsync, deleteLecturesAsync, updateLecturesAsync } from "../ChatSlice.jsx";
 import { useNavigate } from "react-router-dom";
 
-export default function Sidebar({ selectedCourse, setSelectedCourse, openDocumentModal, openCourseModal }) {
-  
+export default function Sidebar({
+  selectedCourse,
+  setSelectedCourse,
+  openDocumentModal,
+  openCourseModal,
+}) {
   const loggedInUser = useSelector(selectLoggedInUser);
   const isInstructor = loggedInUser?.role === "Instructor";
-  const lectures = useSelector(selectLectures) || []; // Fallback to empty array
+  const lectures = useSelector(selectLectures) || [];
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -30,6 +43,21 @@ export default function Sidebar({ selectedCourse, setSelectedCourse, openDocumen
 
   const handleLogout = () => {
     dispatch(logoutAsync());
+  };
+
+  const handleUpdate = (lecture) => {
+    const updatedData = {
+        // Define the updated lecture data here
+        name: "Updated Lecture Name", // Example
+        description: "Updated Description" // Example
+    };
+
+    dispatch(updateLecturesAsync({ id: lecture._id, data: updatedData }));
+};
+
+  const handleDelete = (lecture) => {
+    console.log(lecture)
+    dispatch(deleteLecturesAsync(lecture._id))
   };
 
   return (
@@ -62,35 +90,84 @@ export default function Sidebar({ selectedCourse, setSelectedCourse, openDocumen
           )}
         </Box>
         <Divider sx={{ mb: 2 }} />
-        <List>
-          {lectures.map((lecture, index) => (
-            <ListItemButton
-              key={index}
-              selected={selectedCourse?.name === lecture.name}
-              onClick={() => setSelectedCourse(lecture)}
-              sx={{
-                borderRadius: 1,
-                "&.Mui-selected": {
-                  backgroundColor: "#EDEDED",
-                  borderLeft: "4px solid #000",
-                },
-                "&:hover": { backgroundColor: "#F0F0F0" },
-              }}
-            >
-              <ListItemText
-                primary={lecture.name}
-                primaryTypographyProps={{ color: "#333" }}
-                secondary={`${lecture.files.length} dosya`}
-                secondaryTypographyProps={{ color: "#666" }}
-              />
-            </ListItemButton>
-          ))}
-        </List>
+        <Box
+          sx={{
+            maxHeight: "calc(100vh - 200px)", // Adjust based on available height
+            overflowY: "auto",
+          }}
+        >
+          <List>
+            {lectures.map((lecture, index) => (
+              <ListItemButton
+                key={index}
+                selected={selectedCourse?.name === lecture.name}
+                onClick={() => setSelectedCourse(lecture)}
+                sx={{
+                  borderRadius: 1,
+                  "&.Mui-selected": {
+                    backgroundColor: "#EDEDED",
+                    borderLeft: "4px solid #000",
+                  },
+                  "&:hover": { backgroundColor: "#F0F0F0" },
+                  position: "relative",
+                }}
+              >
+                <ListItemText
+                  primary={lecture.name}
+                  primaryTypographyProps={{ color: "#333" }}
+                  secondary={`${lecture.files.length} dosya`}
+                  secondaryTypographyProps={{ color: "#666" }}
+                />
+                {isInstructor && (
+                  <Box
+                    sx={{
+                      position: "absolute",
+                      top: "50%",
+                      right: 8,
+                      transform: "translateY(-50%)",
+                      display: "flex",
+                      gap: 1,
+                    }}
+                  >
+                    <IconButton
+                      size="small"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleUpdate(lecture);
+                      }}
+                      sx={{ padding: "4px" }} 
+                    >
+                      <Edit fontSize="inherit" />
+                    </IconButton>
+                    <IconButton
+                      size="small"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleDelete(lecture);
+                      }}
+                      sx={{ padding: "4px" }} 
+                    >
+                      <Delete fontSize="inherit" />
+                    </IconButton>
+                  </Box>
+                )}
+              </ListItemButton>
+            ))}
+          </List>
+        </Box>
       </Box>
 
       <Box>
         <Divider sx={{ mb: 2 }} />
-        <Typography variant="body1" sx={{ textAlign: "center", mb: 1, fontWeight: "bold", color: "#333" }}>
+        <Typography
+          variant="body1"
+          sx={{
+            textAlign: "center",
+            mb: 1,
+            fontWeight: "bold",
+            color: "#333",
+          }}
+        >
           Hoşgeldiniz, {loggedInUser?.name}
         </Typography>
         <Button
