@@ -16,8 +16,7 @@ const extractDocxText = async (filePath) => {
     return { content: pages };
 };
 
-const extractPdfText = async (filePath) => {
-    const fileBuffer = fs.readFileSync(filePath);
+const extractPdfText = async (fileBuffer) => {
     const pdfData = await pdfParse(fileBuffer);
     const rawText = pdfData.text.trim();
 
@@ -67,13 +66,13 @@ const extractXlsxText = async (filePath) => {
 exports.processFile = async (file) => {
     switch (file.mimetype) {
         case "application/pdf":
-            return extractPdfText(file.path);
+            return extractPdfText(file.buffer);
         case "application/vnd.openxmlformats-officedocument.wordprocessingml.document":
-            return extractDocxText(file.path);
+            return extractDocxText(file.buffer);
         case "application/vnd.openxmlformats-officedocument.presentationml.presentation":
-            return extractPptxText(file.path);
+            return extractPptxText(file.buffer);
         case "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet":
-            return extractXlsxText(file.path);
+            return extractXlsxText(file.buffer);
         default:
             throw new Error("Unsupported file type");
     }

@@ -7,11 +7,16 @@ import { useDispatch } from "react-redux";
 const DocumentUploadModal = ({ open, onClose }) => {
   const [fileName, setFileName] = React.useState("");
   const [file, setFile] = React.useState(null);
+  const formData = new FormData();
+
   const dispatch = useDispatch();
 
   const handleSubmit = () => {
-    // dispatch(uploadFileAsync({ fileName, file }));
-    console.log("Doküman Yüklendi:", { fileName, file });
+    formData.append("file",file)
+    formData.append("fileName",fileName)
+
+    dispatch(uploadFileAsync(formData));
+    console.log("Doküman Yüklendi:", formData);
     onClose();
   };
 
@@ -42,6 +47,9 @@ const DocumentUploadModal = ({ open, onClose }) => {
             fullWidth
             size="small"
           />
+          <Typography variant="h6" sx={{fontSize: 15}} mb={2}>
+            {file?.name}
+          </Typography>
           <Button
             variant="contained"
             component="label"
