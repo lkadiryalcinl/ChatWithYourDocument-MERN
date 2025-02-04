@@ -57,6 +57,10 @@ COOKIE_EXPIRATION_DAYS="30"    # Days
 # Secret key for jwt security
 SECRET_KEY="your-secret-key"
 
+GEMINI_AI_KEY="your-gemini-ai-api-key"
+
+SYSTEM_PROMPT = "your-system-prompt"
+
 # Environment (production/development)
 PRODUCTION="false" # Initially set to false for development
 ```
