@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 
-const { upload, multerErrorHandler } = require("../middleware/multerConfig");
+const { upload, multerErrorHandler } = require("../config/multer");
 const fileController = require("../controllers/File");
 const { verifyToken } = require('../middleware/VerifyToken');
 
